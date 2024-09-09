@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -14,6 +15,7 @@ function Login() {
     const [registerPassword, setRegisterPassword] = useState("");
     const [registerName, setRegisterName] = useState("");
     const [registerSurname, setRegisterSurname] = useState("");
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         try {
@@ -23,6 +25,7 @@ function Login() {
                 loginPassword
             );
             console.log("User logged in: ", userCredential.user.uid);
+            navigate("/chats");
         } catch (error) {
             console.error("Login error: ", error);
         }
