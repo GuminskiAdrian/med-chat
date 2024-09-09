@@ -1,0 +1,31 @@
+.chatsContainer {
+    width: 50%;
+    margin: 5rem auto;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(204, 204, 204, 1);
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    align-items: center;
+
+    h1 {
+        font-weight: 500;
+        grid-column: 1 / span 1;
+    }
+    input {
+        
+        grid-column: 2 / span 1;
+        border: 1px solid #ccc;
+        width: 40%;
+        justify-self: end;
+        border-radius: 0.5rem;
+        height: 2rem;
+        padding-left: 0.5rem;
+    }
+
+    p {
+        font-size: 1.25rem;
+    }
+}
