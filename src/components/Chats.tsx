@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
+import { useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import '../styles/chats.css';
+import { signOut } from "firebase/auth";
 
 function Chats() {
     const [chats, setChats] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchChats = async () => {
@@ -41,6 +44,15 @@ function Chats() {
         fetchChats();
     }, []);
 
+    const handleLogout = async ()=> {
+        try {
+            await signOut(auth);
+            navigate('/login');
+        } catch (error) {
+            console.error("Logout error: ", error);
+        }
+    }
+
     if (loading) {
         return <div>Loading chats...</div>;
     }
@@ -48,7 +60,7 @@ function Chats() {
     return (
         <div className="chatsContainer">
             <h1>Twoje Czaty</h1>
-            <input type="button" value="wyloguj mnie" />
+            <input type="button" value="wyloguj mnie" onClick={handleLogout} />
             {chats.length === 0 ? (
                 <p>Brak dostępnych czatów</p>
             ) : (
