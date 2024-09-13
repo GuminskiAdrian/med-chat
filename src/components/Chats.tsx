@@ -53,6 +53,10 @@ function Chats() {
         }
     }
 
+    const openChat = (chatId: string) => {
+        navigate(`/chats/${chatId}`);
+    }
+
     if (loading) {
         return <div>Loading chats...</div>;
     }
@@ -66,7 +70,7 @@ function Chats() {
             ) : (
                 <ul>
                     {chats.map((chat) => (
-                        <li key={chat.id}>
+                        <li key={chat.id} onClick={ () => openChat(chat.id)}>
                             <p>{chat.name}</p>
                         </li>
                     ))}
