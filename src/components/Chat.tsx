@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import {
     collection,
     addDoc,
-    getDocs,
-    getDoc,
     query,
     onSnapshot,
     orderBy,
+    doc,
+    getDoc,
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 
@@ -16,7 +16,38 @@ function Chat() {
     const [messages, setMessages] = useState<any[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(true);
+    const [usersCache, setUsersCache] = useState<{ [uid: string]: any }>({});
     const currentUser = auth.currentUser;
+
+    const fetchUserName = async (uid: string) => {
+        if (usersCache[uid]) {
+            console.log(`Cache hit for UID: ${uid}`, usersCache[uid]);
+            return usersCache[uid].name + ' ' + usersCache[uid].surname;
+        }
+        
+        console.log(`Fetching user data for UID: ${uid}`);
+        try {
+            const userDocRef = doc(db, "Users", uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data();
+                console.log("Fetched user data:", userData);
+
+                setUsersCache((prevCache) => ({
+                    ...prevCache,
+                    [uid]: userData,
+                }));
+
+                return userData.name + " " + userData.surname;
+            } else {
+                console.error(`No user found for UID: ${uid}`);
+            }
+        } catch (error) {
+            console.error("Error fetching user info: ", error);
+        }
+        return "Unknown";
+    };
 
     useEffect(() => {
         const fetchMessages = async () => {
@@ -28,19 +59,22 @@ function Chat() {
                     "messages"
                 );
 
-                const q = query(
-                    messagesCollection,
-                    orderBy("createdAt", "asc")
-                );
+                const q = query(messagesCollection, orderBy("createdAt", "asc"));
 
-                onSnapshot(q, (querySnapshot) => {
+                onSnapshot(q, async (querySnapshot) => {
                     const messagesData: any[] = [];
-                    querySnapshot.forEach((doc) => {
+
+                    for (const doc of querySnapshot.docs) {
+                        const message = doc.data();
+                        console.log("Processing message:", message);
+
+                        const senderName = await fetchUserName(message.sender);
                         messagesData.push({
                             id: doc.id,
-                            ...doc.data(),
+                            ...message,
+                            senderName,
                         });
-                    });
+                    }
 
                     setMessages(messagesData);
                 });
@@ -54,7 +88,7 @@ function Chat() {
         if (chatId) {
             fetchMessages();
         }
-    }, [chatId]);
+    }, [chatId, usersCache]);
 
     const sendMessage = async () => {
         if (newMessage.trim() === "" || !currentUser) return;
@@ -93,7 +127,7 @@ function Chat() {
                                     <strong>
                                         {message.sender === currentUser?.uid
                                             ? "You"
-                                            : message.sender}
+                                            : message.senderName}
                                         :
                                     </strong>{" "}
                                     {message.text}
