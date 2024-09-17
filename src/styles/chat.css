@@ -1,0 +1,53 @@
+.chatContainer {
+    width: 80%;
+    margin: 5rem auto;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(204, 204, 204, 1);
+    padding: 2rem;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.3fr 1fr 6fr 0.5fr;
+    justify-content: center;
+
+    h1 {
+        text-align: center;
+    }
+
+    .back {
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        height: 2rem;
+        align-self: center;
+        justify-self: left;
+    }
+
+    .messagesContainer {
+        width: 100%;
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+    }
+
+    .messageInput {
+        justify-self: stretch;
+        align-self: end;
+        display: grid;
+        grid-template-columns: 4fr 1fr;
+        gap: 0.2rem;
+
+        input {
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            height: 2rem;
+            align-self: center;
+        }
+        #send {
+            background-color: rgba(9, 126, 9, 0.867);
+            color: white;
+            text-align: center;
+        }
+    }
+}

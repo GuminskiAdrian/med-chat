@@ -10,6 +10,8 @@ import {
     getDoc,
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
+import '../styles/chat.css';
+import { useNavigate } from "react-router-dom";
 
 function Chat() {
     const { chatId } = useParams();
@@ -18,10 +20,10 @@ function Chat() {
     const [loading, setLoading] = useState(true);
     const [usersCache, setUsersCache] = useState<{ [uid: string]: any }>({});
     const currentUser = auth.currentUser;
+    const navigate = useNavigate();
 
     const fetchUserName = async (uid: string) => {
         if (usersCache[uid]) {
-            console.log(`Cache hit for UID: ${uid}`, usersCache[uid]);
             return usersCache[uid].name + ' ' + usersCache[uid].surname;
         }
         
@@ -32,7 +34,6 @@ function Chat() {
 
             if (userDocSnap.exists()) {
                 const userData = userDocSnap.data();
-                console.log("Fetched user data:", userData);
 
                 setUsersCache((prevCache) => ({
                     ...prevCache,
@@ -66,8 +67,6 @@ function Chat() {
 
                     for (const doc of querySnapshot.docs) {
                         const message = doc.data();
-                        console.log("Processing message:", message);
-
                         const senderName = await fetchUserName(message.sender);
                         messagesData.push({
                             id: doc.id,
@@ -113,12 +112,17 @@ function Chat() {
         return <div>Ładowanie wiadomości...</div>;
     }
 
+    const backToChats = async ()=> {
+        navigate('/chats');
+    }
+
     return (
         <div className="chatContainer">
+            <input type="button" value="powrót do chatów" className="back" onClick={backToChats}/>
             <h1>Wiadomości z chatu</h1>
             <div className="messagesContainer">
                 {messages.length === 0 ? (
-                    <p>No messages available</p>
+                    <p></p>
                 ) : (
                     <ul>
                         {messages.map((message) => (
@@ -126,17 +130,12 @@ function Chat() {
                                 <p>
                                     <strong>
                                         {message.sender === currentUser?.uid
-                                            ? "You"
+                                            ? "Twoja wiadomosc"
                                             : message.senderName}
                                         :
                                     </strong>{" "}
                                     {message.text}
                                 </p>
-                                <small>
-                                    {new Date(
-                                        message.createdAt.seconds * 1000
-                                    ).toLocaleTimeString()}
-                                </small>
                             </li>
                         ))}
                     </ul>
@@ -149,7 +148,7 @@ function Chat() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                 />
-                <button onClick={sendMessage}>Wyślij</button>
+                <input type="button" value="Wyślij" onClick={sendMessage} id="send"/>
             </div>
         </div>
     );

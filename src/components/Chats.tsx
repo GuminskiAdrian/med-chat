@@ -58,7 +58,7 @@ function Chats() {
     }
 
     if (loading) {
-        return <div>Loading chats...</div>;
+        return <div>Ładowanie czatów...</div>;
     }
 
     return (

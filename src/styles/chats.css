@@ -1,5 +1,5 @@
 .chatsContainer {
-    width: 50%;
+    width: 80%;
     margin: 5rem auto;
     border: 1px solid #ccc;
     border-radius: 1rem;
@@ -15,10 +15,9 @@
         grid-column: 1 / span 1;
     }
     input {
-        
         grid-column: 2 / span 1;
         border: 1px solid #ccc;
-        width: 40%;
+        width: 60%;
         justify-self: end;
         border-radius: 0.5rem;
         height: 2rem;

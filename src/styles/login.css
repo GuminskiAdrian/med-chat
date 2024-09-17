@@ -1,25 +1,12 @@
 .Forms {
-    width: 50%;
+    width: 80%;
     margin: 5rem auto;
     border: 1px solid #ccc;
     border-radius: 1rem;
     box-shadow: 0 4px 8px rgba(204, 204, 204, 1);
     padding: 2rem;
-
     display: grid;
     gap: 2rem;
-
-    .registerForm{
-        position: relative;
-        ::after {
-            content: "";
-            position: absolute;
-            height: 2px;
-            width: 82%;
-            background-color: #ccc;
-            top: -.25rem;
-        }
-    }
 
     .loginForm,
     .registerForm {
